@@ -1,0 +1,31 @@
+name: 05 Manuelle Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Name für die Begrüßung"
+        required: true
+        default: "Teilnehmer"
+
+jobs:
+  manual:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository herunterladen
+        uses: actions/checkout@v4
+
+      - name: Skripte ausführbar machen
+        run: chmod +x scripts/*.sh
+
+      - name: Manuelles Skript starten
+        env:
+          NAME: ${{ github.event.inputs.name }}
+        run: bash scripts/06_manual_message.sh
+
+      - name: Nachricht hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: manuelle-nachricht
+          path: output/manuelle_nachricht.txt
